@@ -1,0 +1,42 @@
+{% extends 'layouts/base.html' %} {% block content%}
+
+<body style="background-color: #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+    <div class="container mb-5 pb-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-md-10 col-sm-12 col-xs-12">
+                <div class="card shadow rounded-0" style=" border-radius: 5px !important; border: 2px solid #e3edf7 !important; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px !important;">
+                    <div class="card-header">
+                        <div class="h5 card-title fw-bold">My Profile</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <dl>
+                                        <dt class="text-muted">Fullname</dt>
+                                        <dd class="ps-4">{{ user.first_name }} {{ user.last_name }}</dd>
+                                        <dt class="text-muted">Email</dt>
+                                        <dd class="ps-4">{{ user.email }}</dd>
+                                        <dt class="text-muted">Username</dt>
+                                        <dd class="ps-4">{{ user.username }}</dd>
+                                    </dl>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex w-100 text-end justify-content-end">
+                            <a href="{% url 'update-password' %}" style="border-radius: 6px !important;"
+                                class="btn btn btn-light border btn-sm bg-gradient rounded-0 me-2">Update Password</a>
+                            <a href="{% url 'update-profile' %}" style="border-radius: 6px !important;"
+                                class="btn btn btn-primary btn-sm bg-gradient rounded-0">Update Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+{% endblock content%}

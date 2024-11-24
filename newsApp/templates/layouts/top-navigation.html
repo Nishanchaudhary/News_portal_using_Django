@@ -1,0 +1,64 @@
+{% load static %}
+<header class="header-area">
+    <!-- Navbar Area -->
+    <div style="background-color: #e3edf7;" class="newsbox-main-menu">
+        <div style="background-color: #e3edf7;" class="classy-nav-container breakpoint-off">
+            <div style="margin-bottom: 0px;" class="container-fluid">
+                <!-- Menu -->
+                <nav style="background-color: #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;  padding-left: 10px !important; padding-right: 10px !important; height: 70px; "
+                    class="classy-navbar justify-content-between fixed-top" id="newsboxNav">
+
+                    <!-- Nav brand -->
+                    <a href="{%url 'home-page'%}" class="nav-brand"><img style="height:90px; width:90px;"
+                            src="{% static 'img/core-img/news.png' %}" alt=""></a>
+
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"><span></span><span></span><span></span></span>
+                    </div>
+
+                    <!-- Menu -->
+                    <div class="classy-menu">
+
+                        <!-- Close Button -->
+                        <div class="classycloseIcon">
+                            <div class="cross-wrap"><span class="top"></span><span class="bottom"></span></div>
+                        </div>
+
+                        <!-- Nav Start -->
+                        <div class="classynav">
+                            <ul>
+                                <li><a style="font-size: 18px; text-shadow:rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;" href="{%url 'home-page'%}">Home</a>
+                                    {% for category in categories %}
+                                <li><a style="font-size: 18px; text-shadow:rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;" href="{% url 'category-post' category.id %}">{{category}}</a></li>
+                                {% endfor %}
+                                {% if not user.id %}
+                                <li><a href="{% url 'login-page' %}" style="font-size: 18px; text-shadow:rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;">Login</a></li>
+                                {% else %}
+                                <li>
+                                    <a style="font-size: 18px; text-shadow:rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;" href="#">Admin, {{user.username}}</a>
+                                    <ul class="dropdown" style="background-color: #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px; ">
+                                        <li><a href="{% url 'profile-page' %}">Profile</a></li>
+                                        <li><a href="{% url 'new-post' %}">New Post</a></li>
+                                        <li><a href="{% url 'all-posts' %}">All Posts</a></li>
+                                        <li><a href="{% url 'logout' %}">Logout</a></li>
+                                    </ul>
+                                </li>
+                                {% endif %}
+                            </ul>
+
+                        </div>
+                        <!-- Nav End -->
+
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,182 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block header %}
+<link rel="stylesheet" href="{% static 'summernote/summernote.min.css' %}">
+<link rel="stylesheet" href="{% static 'select2/dist/css/select2.min.css' %}">
+<style>
+    .note-modal .modal-header {
+        direction: rtl;
+    }
+    
+    .note-editor {
+        background: var(--light) !important;
+    }
+    
+    #cimg {
+        max-width: calc(30%);
+        max-height: 15vh;
+        object-fit: scale-down;
+        object-position: center center;
+    }
+</style>
+{% endblock header %} {% block content %}
+<body style="background-color: #e3edf7;">
+<div class="container-fluid py-3 pb-5" >
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10 col-sm-12 col-xs-12">
+            <div class="card shadow-dark rounded-0" style=" border-radius: 5px !important; border: 2px solid #e3edf7 !important; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px !important;">
+                <div class="card-header">
+                    <h5 class="card-title">{% if post.id %}Update Post{% else %}Create New Post{% endif %}</h5>
+                </div>
+                <div class="card-body">
+                    <form action="" id="post-form">
+                        <input type="hidden" name="id" value="{{post.id}}">
+                        <input type="hidden" name="user" value="{% if post.id %}{{post.user.id}}{% else %}{{user.id}}{% endif %}"> {% csrf_token %}
+                        <div class="form-group mb-3">
+                            <label for="title" class="control-label">Title</label>
+                            <input type="text" class="form-control rounded-0" id="title" name="title" value="{{post.title}}" required="required">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="category" class="control-label">Category</label>
+                            <select class="form-control rounded-0" id="category" name="category" required="required">
+                                {% if not post.id %}
+                                <option value="" selected disabled></option>
+                                {% endif %}
+                                {% for category in categories %}
+                                {% if category.id == post.category.id %}
+                                <option value="{{category.id}}" selected>{{category}}</option>
+                                {% else %}
+                                <option value="{{category.id}}">{{category}}</option>
+                                {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="short_description" class="control-label">Short Description</label>
+                            <textarea rows="6" class="form-control rounded-0" id="short_description" name="short_description" required="required">{{post.short_description}}</textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="content" class="control-label">Content</label>
+                            <textarea rows="6" class="form-control rounded-0" id="content" name="content" required="required">{{post.content}}</textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="banner" class="form-label">Banner Image</label>
+                            <div class="custom-file">
+                                <label class="custom-file-label rounded-0" for="banner">Choose file...</label>
+                                <input class="rounded-0 custom-file-input" onchange="display_image(this)" type="file" name="banner_path" id="banner" accept="images/*">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <img src="{% if post.banner_path %}{{post.banner_path.url}}{% endif %}" alt="Banner Image" id="cimg">
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="meta_keywords" class="control-label">Keywords <small><em>(seperate your keywords using comma ',')</em></small></label>
+                            <textarea rows="3" class="form-control rounded-0" id="meta_keywords" name="meta_keywords" required="required">{{post.meta_keywords}}</textarea>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label for="status" class="control-label">Status</label>
+                            <select class="form-control rounded-0" id="status" name="status" required="required">
+                                {% if post.status == '1' %}
+                                <option value="1" selected>Published</option>
+                                {% else %}
+                                <option value="1">Published</option>
+                                {% endif %}
+                                {% if post.status == '2' %}
+                                <option value="2" selected>Unpublished</option>
+                                {% else %}
+                                <option value="2">Unpublished</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-right py-1">
+                    <button class="btn btn-primary rounded-0 btn-sm" type="submit" style="border-radius: 5px !important;" form="post-form">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %} {% block javascripts %}
+<script src="{% static 'summernote/summernote.min.js' %}"></script>
+<script src="{% static 'select2/dist/js/select2.min.js' %}"></script>
+<script>
+    function display_image(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $('#cimg').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        } else {
+            $('#cimg').attr('src', '');
+        }
+    }
+    $(function() {
+        $('#category').select2({
+            placeholder: "Please select category here",
+            width: '100%'
+        })
+        $('#content').summernote({
+            height: "40vh",
+            placeholder: "Write your content here",
+            toolbar: [
+                // [groupName, [list of button]]
+                ['style', ['style', 'bold', 'italic', 'underline', 'clear']],
+                ['font', ['strikethrough', 'superscript', 'subscript']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['height', ['height']],
+                ['insert', ['picture', 'video']],
+                ['view', ['fullscreen', 'help']]
+            ]
+        })
+        $('#post-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                url: "{% url 'save-post' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert("An error occured ", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg ")
+                        location.href = '/post/'+resp.id
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.html(resp.msg)
+                    } else {
+                        el.text("An error occured ", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal ").scrollTop(0);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>
+</body>
+{% endblock javascripts %}

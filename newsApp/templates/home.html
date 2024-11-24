@@ -1,0 +1,97 @@
+{% extends 'layouts/base.html' %}{% load static %}
+{% block content %}
+
+<!-- ##### Intro News Area Start ##### -->
+<body style="background-color: #e3edf7;">
+<section class="intro-news-area section-padding-100-0 mb-70"  >
+    <div class="container" >
+        <div class="row justify-content-center">
+            <!-- Intro News Tabs Area -->
+            <div class="col-12 col-lg-8" style="background-color: #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;" >
+                <div class="intro-news-tab">
+
+                    <!-- Intro News Filter -->
+                    <div class="intro-news-filter d-flex justify-content-between" style="background-color: #e3edf7;">
+                        <h5>All the news</h5>
+                        <nav>
+                            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                <a class="nav-item nav-link active" id="nav1" data-toggle="tab" href="#nav-1" role="tab" aria-controls="nav-1" aria-selected="true">Latest</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="tab-content" id="nav-tabContent">
+
+                        <div class="tab-pane fade show active" id="nav-1" role="tabpanel" aria-labelledby="nav1">
+                            <div class="row">
+                                {% for lpost in latest_top %}
+                                <!-- Single News Area -->
+                                <div class="col-12 col-sm-6" >
+                                    <div class="single-blog-post style-2 mb-5" style="padding-left: 5px; padding-right: 5px; border: 2px solid #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px; background-color: white;">
+                                        <!-- Blog Thumbnail -->
+                                        <div class="blog-thumbnail">
+                                            <a href="{% url 'view-post' lpost.id %}"><img src="{{lpost.banner_path.url}}" alt="{{lpost.title}}"></a>
+                                        </div>
+
+                                        <!-- Blog Content -->
+                                        <div class="blog-content">
+                                            <span class="post-date">{{lpost.date_created|date:"M d, Y"}}</span>
+                                            <a href="{% url 'view-post' lpost.id %}" class="post-title">{{lpost.title}}</a>
+                                            <a href="mailto:{{lpost.user.email}}" target="_blank" class="post-author">By {{lpost.user.username}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% for lpost in latest_bottom %}
+                                <!-- Single News Area -->
+                                <div class="col-12 col-sm-6">
+                                    <div class="single-blog-post d-flex style-4 mb-30">
+                                        <!-- Blog Thumbnail -->
+                                        <div class="blog-thumbnail">
+                                            <a href="{% url 'view-post' lpost.id %}"><img src="{{lpost.banner_path.url}}" alt="{{lpost.title}}"></a>
+                                        </div>
+
+                                        <!-- Blog Content -->
+                                        <div class="blog-content">
+                                            <span class="post-date">{{lpost.date_created|date:"M d, Y"}}</span>
+                                            <a href="{% url 'view-post' lpost.id %}" class="post-title">{{lpost.title}}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Widget -->
+            <div class="col-12 col-sm-9 col-md-6 col-lg-4">
+                <div class="sidebar-area">
+
+                   <!-- Add Widget -->
+                   <div class="single-widget-area add-widget mb-30">
+                        <a href="#">
+                            <img src="{% static 'img/bg-img/add3.png' %}" alt="">
+                        </a>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+<!-- ##### Intro News Area End ##### -->
+
+<!-- ##### Add Area Start ##### -->
+<div style="background-color: #e3edf7 !important;" class="big-add-area mb-100" >
+    <div class="container-fluid" >
+        <a href="#"><img src="{% static 'img/bg-img/add2.png' %}" alt=""></a> 
+    </div>
+</div>
+<!-- ##### Add Area End ##### -->
+
+</body>
+{% endblock content %}

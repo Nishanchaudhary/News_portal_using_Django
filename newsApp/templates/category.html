@@ -1,0 +1,72 @@
+{% extends 'layouts/base.html' %}{% load static %} {% block content %}
+<body style="background-color: #e3edf7;">
+<div class="news-area section-padding-100-70">
+    <div class="container" style="padding-left: 5px; padding-right: 5px; border: 2px solid #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px;">
+        <h3 class="text-center"><b>{{category.name}} Posts</b></h3>
+        <center>
+            <hr class="w-30">
+        </center>
+        <div class="row mt-5">
+            <div class="col-12 col-md-8 col-lg-9">
+                <div id="post-list">
+                    {% for post in posts %}
+                    <!-- Single News Area -->
+                    <div class="single-blog-post d-flex flex-wrap style-5 mb-30" style="padding-left: 5px; padding-right: 5px; border: 2px solid #e3edf7; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px; background-color: white;">
+                        <!-- Blog Thumbnail -->
+                        <div class="blog-thumbnail">
+                            <a href="{% url 'view-post' post.pk %}"><img src="{{post.banner_path.url}}" alt="{post.title}"></a>
+                        </div>
+
+                        <!-- Blog Content -->
+                        <div class="blog-content">
+                            <span class="post-date">{{post.date_created|date:'M d, Y'}}</span>
+                            <a href="{% url 'view-post' post.pk %}" class="post-title">{{post.title}}</a>
+                            <a href="#" class="post-author">By {{post.user.username}}</a>
+                            <p>{{post.short_description|truncatechars:100}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="sidebar-area">
+
+                    <!-- Add Widget -->
+                    <div class="single-widget-area add-widget mb-30">
+                        <a href="#">
+                            <img src="{% static 'img/bg-img/add3.png' %}" alt="">
+                        </a>
+                    </div>
+
+                    <!-- Latest News Widget -->
+                    <div class="single-widget-area news-widget mb-30">
+                        <h4>Latest News</h4>
+                            {% for lpost in latest %}
+                            <!-- Single News Area -->
+                            <div class="single-blog-post d-flex style-4 mb-30" style=" border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px; background-color: white;">
+                                <!-- Blog Thumbnail -->
+                                <div class="blog-thumbnail">
+                                    <a href="{% url 'view-post' lpost.pk %}"><img src="{{lpost.banner_path.url}}" alt="{{lpost.title}}"></a>
+                                </div>
+
+                                <!-- Blog Content -->
+                                <div class="blog-content">
+                                    <span class="post-date">{{lpost.date_created|date:"M d, Y"}}</span>
+                                    <a href="{% url 'view-post' lpost.pk %}" class="post-title">{{lpost.title}}</a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<hr> {% endblock content %}

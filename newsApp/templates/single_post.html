@@ -1,0 +1,254 @@
+{% extends 'layouts/base.html' %}{% load static %} {% block header %}
+<meta name="description" content="{{post.short_description}}"/>
+<meta name="meta-keywords" content="{{post.meta_keywords}}"/>
+<meta name="og:title" content="{{post.title}}"/>
+<meta name="og:url" content="{{request.get_full_path}}"/>
+<meta name="og:description " content="{{post.short_description}}"/>
+<meta name="og:image" content="{{post.banner_path.url}}"/>
+
+<style>
+    .comment_area ol:empty:after {
+        content: "No comment has been posted yet.";
+        text-align: center;
+        color: var(--gray);
+        font-style: italic;
+    }
+</style>
+{% endblock header %} {% block content %}
+<body style="background-color: white;">
+<div class="post-details-title-area bg-overlay clearfix" style="background-image: url({{post.banner_path.url}})">
+    <div class="container-fluid h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12 col-lg-8">
+                <!-- Post Content -->
+                <div class="post-content" >
+                    <p class="tag" ><span >{{post.category}}</span></p>
+                    <p class="post-title"  >{{post.title}}</p>
+                    <div class="d-flex align-items-center" >
+                        <span class="post-date mr-30"  >{{post.date_created|date:"M d, Y"}}</span>
+                        <span class="post-date" >By {{post.user.username}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="post-news-area section-padding-100-0 mb-70">
+    <div class="container" >
+        <div class="row justify-content-center">
+            <!-- Post Details Content Area -->
+            <div class="col-12 col-lg-8" ">
+                <div class="mb-2">
+                    <img src="{{post.banner_path.url}}" alt="{{post.title}}" class="imagr-fluid w-100">
+                </div>
+                {% if actions %}
+                <div class="mb-3">
+                    <a href="{% url 'edit-post' post.id %}" style="border-radius: 6px !important;" class="btn btn-primary btn-sm rounded-0"><i class="fa fa-edit"></i> Edit Post</a>
+                    <button type="button" id="delete-post" style="border-radius: 6px !important;" class="btn btn-danger btn-sm rounded-0"><i class="fa fa-trash"></i> Delete Post</button>
+                </div>
+                {% endif %}
+                <div class="post-details-content mb-100" >{{post.content|safe}}</div>
+
+                <!-- Comment Area Start -->
+                <div class="comment_area clearfix mb-100">
+                    <h4 class="mb-50">Comments</h4>
+
+                    <ol>
+                        {% for comment in comments %}
+                        <!-- Single Comment Area -->
+                        <li class="single_comment_area">
+                            <!-- Comment Content -->
+                            <div class="comment-content d-flex">
+                                <!-- Comment Author -->
+                                <div class="comment-author">
+                                    <img src="{% static 'img/ava.jpg' %}" alt="{{comment.name}}">
+                                </div>
+                                <!-- Comment Meta -->
+                                <div class="comment-meta">
+                                    <div class="d-flex">
+                                        <a href="mailto:{{comment.email}}" target="_blank" class="post-author">{{comment.name}}</a>
+                                        <a href="#" class="post-date">{{comment.date_created|date:"M d, Y"}} </a> {% if user.is_superuser %}
+                                        <a href="javascript:void(0)" data-url="{% url 'delete-comment' comment.id %}" class=" text-danger text-sm delete-comment">Delete Comment</a> {% endif %}
+                                    </div>
+                                    <larger class="font-weight-bold">{{comment.subject}}</larger>
+                                    <p>{{comment.message}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ol>
+                </div>
+
+                <div class="post-a-comment-area mb-30 clearfix">
+                    <h4 class="mb-50">Leave a Comment</h4>
+
+                    <!-- Reply Form -->
+                    <div class="contact-form-area">
+                        <form action="" id="comment-form" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="id" value="">
+                            <input type="hidden" name="post" value="{{post.id}}">
+                            <div class="row">
+                                {% if not user.id %}
+                                <div class="col-12 col-lg-6">
+                                    <input type="text" class="form-control" id="name" name="name" placeholder="Name*">
+                                </div>
+                                <div class="col-12 col-lg-6">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email*">
+                                </div>
+                                {% else %}
+                                <input type="hidden" name="name" value="{{user.first_name}} {{user.last_name}}">
+                                <input type="hidden" name="email" value="{{user.email}}"> {% endif %}
+                                <div class="col-12">
+                                    <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject">
+                                </div>
+                                <div class="col-12">
+                                    <textarea name="message" class="form-control" id="message" name="message" cols="30" rows="10" placeholder="Message"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn newsbox-btn mt-30" type="submit">Submit Comment</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Widget -->
+            <div class="col-12 col-sm-9 col-md-6 col-lg-4">
+                <div class="sidebar-area">
+
+                    <!-- Add Widget -->
+                    <div class="single-widget-area add-widget mb-30">
+                        <a href="#">
+                            <img src="{% static 'img/bg-img/add3.png' %}" alt="">
+                        </a>
+                    </div>
+
+                    <!-- Latest News Widget -->
+                    <div class="single-widget-area news-widget mb-30">
+                        <h4>Latest News</h4>
+
+                        {% for lpost in latest %}
+                        <!-- Single News Area -->
+                        <div class="single-blog-post d-flex style-4 mb-30" style=" border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.19) 0px 10px 20px,
+    rgba(0, 0, 0, 0.23) 0px 6px 6px; background-color: white;">
+                            <!-- Blog Thumbnail -->
+                            <div class="blog-thumbnail">
+                                <a href="{% url 'view-post' lpost.pk %}"><img src="{{lpost.banner_path.url}}" alt="{{lpost.title}}"></a>
+                            </div>
+
+                            <!-- Blog Content -->
+                            <div class="blog-content">
+                                <span class="post-date">{{lpost.date_created|date:"M d, Y"}}</span>
+                                <a href="{% url 'view-post' lpost.pk %}" class="post-title">{{lpost.title}}</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %} {% block javascripts %}
+<script>
+    $(function() {
+        if ($('.single_comment_area').length <= 0) {
+            $('.comment_area>ol').html('')
+        }
+        $('#delete-post').click(function() {
+            if (confirm("Are you sure to delete this post?") === true) {
+                start_loader()
+                $.ajax({
+                    url: '{% url "delete-post" post.id %}',
+                    error: err => {
+                        console.error(err)
+                        alert("An error occurred.")
+                        end_loader()
+                    },
+                    success: function(resp) {
+                        if (resp.status == 'success') {
+                            location.replace('{% url "all-posts" %}')
+                        } else if (!!resp.msg) {
+                            alert(resp.msg)
+                        }
+                        end_loader()
+                    }
+                })
+            }
+        })
+        $('.delete-comment').click(function() {
+            var url = $(this).attr('data-url')
+            if (confirm("Are you sure to delete this comment?") === true) {
+                start_loader()
+                $.ajax({
+                    url: url,
+                    error: err => {
+                        console.error(err)
+                        alert("An error occurred.")
+                        end_loader()
+                    },
+                    success: function(resp) {
+                        if (resp.status == 'success') {
+                            location.reload()
+                        } else if (!!resp.msg) {
+                            alert(resp.msg)
+                        }
+                        end_loader()
+                    }
+                })
+            }
+        })
+        $('#comment-form').submit(function(e) {
+            e.preventDefault();
+            var _this = $(this)
+            $('.err-msg').remove();
+            var el = $('<div>')
+            el.addClass("alert alert-danger err-msg")
+            el.hide()
+            if (_this[0].checkValidity() == false) {
+                _this[0].reportValidity();
+                return false;
+            }
+            start_loader();
+            $.ajax({
+                url: "{% url 'save-comment' %}",
+                data: new FormData($(this)[0]),
+                cache: false,
+                contentType: false,
+                processData: false,
+                method: 'POST',
+                type: 'POST',
+                dataType: 'json',
+                error: err => {
+                    console.log(err)
+                    alert("An error occured ", 'error');
+                    end_loader();
+                },
+                success: function(resp) {
+                    if (typeof resp == 'object' && resp.status == 'success') {
+                        el.removeClass("alert alert-danger err-msg ")
+                        location.reload()
+                    } else if (resp.status == 'failed' && !!resp.msg) {
+                        el.html(resp.msg)
+                    } else {
+                        el.text("An error occured ", 'error');
+                        end_loader();
+                        console.err(resp)
+                    }
+                    _this.prepend(el)
+                    el.show('slow')
+                    $("html, body, .modal ").scrollTop(_this.offset().top - 200);
+                    end_loader()
+                }
+            })
+        })
+    })
+</script>
+</body>
+{% endblock javascripts %}

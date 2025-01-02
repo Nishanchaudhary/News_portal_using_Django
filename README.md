@@ -27,3 +27,5 @@ For any inquiries, feedback, or suggestions, feel free to reach out:
 - **Name**: Nishan Kumar Chaudhary
 - **Email**: chaudharynishan314@gmail.com 
 - **GitHub**: [Nishanchaudhary](https://github.com/Nishanchaudhary)
+
+## Live link :-[News_portal](https://nishankumar.pythonanywhere.com/ )
